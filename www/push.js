@@ -18,7 +18,8 @@ var PushNotification = function(options) {
     this._handlers = {
         'registration': [],
         'notification': [],
-        'error': []
+        'error': [],
+        'click': []
     };
 
     // require options parameter
