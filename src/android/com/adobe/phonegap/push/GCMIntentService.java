@@ -43,7 +43,8 @@ public class GCMIntentService extends GcmListenerService implements PushConstant
 
     private static final String LOG_TAG = "PushPlugin_GCMIntentService";
     private static HashMap<Integer, ArrayList<String>> messageMap = new HashMap<Integer, ArrayList<String>>();
-
+    private NotificationManager mNotificationManager;
+    
     public void setNotification(int notId, String message){
         ArrayList<String> messageList = messageMap.get(notId);
         if(messageList == null) {
@@ -301,15 +302,15 @@ public class GCMIntentService extends GcmListenerService implements PushConstant
             createNotification(context, extras);
         }
 
-		if(!PushPlugin.isActive() && "1".equals(forceStart)){
+		    if (!PushPlugin.isActive() && "1".equals(forceStart)){
             Log.d(LOG_TAG, "app is not running but we should start it and put in background");
-			Intent intent = new Intent(this, PushHandlerActivity.class);
+			      Intent intent = new Intent(this, PushHandlerActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(PUSH_BUNDLE, extras);
-			intent.putExtra(START_IN_BACKGROUND, true);
+			      intent.putExtra(START_IN_BACKGROUND, true);
             intent.putExtra(FOREGROUND, false);
             startActivity(intent);
-		} else if ("1".equals(contentAvailable)) {
+		    } else if ("1".equals(contentAvailable)) {
             Log.d(LOG_TAG, "app is not running and content available true");
             Log.d(LOG_TAG, "send notification event");
             PushPlugin.sendExtras(extras);
@@ -317,7 +318,13 @@ public class GCMIntentService extends GcmListenerService implements PushConstant
     }
 
     public void createNotification(Context context, Bundle extras) {
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // TODO: Add some flag to check if there is no local notification, call the below method
+        //createNotification(context, extras, mNotificationManager);
+    }
+
+    public void createNotification(Context context, Bundle extras, NotificationManager mNotificationManager) {
         String appName = getAppName(this);
         String packageName = context.getPackageName();
         Resources resources = context.getResources();

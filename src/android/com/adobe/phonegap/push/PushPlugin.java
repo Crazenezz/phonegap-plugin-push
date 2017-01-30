@@ -232,6 +232,8 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
                     }
                 }
             });
+        } else if (NOTIFY.equals(action)) {
+            notifyLocalNotification(data);
         } else {
             Log.e(LOG_TAG, "Invalid action : " + action);
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
@@ -389,6 +391,31 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
             Log.e(LOG_TAG, "Failed to unsubscribe to topic: " + topic, e);
 			throw e;
         }
+    }
+
+    private void notifyLocalNotification(JSONArray data) {
+        GCMIntentService gcmIntentService = new GCMIntentService();
+
+        final NotificationManager notificationManager = (NotificationManager) cordova.getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Log.d(LOG_TAG, "Notify Local Notification");
+
+        try {
+            gcmIntentService.createNotification(getApplicationContext(), jsonToBundle(data.getJSONObject(0)), notificationManager);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Bundle jsonToBundle(JSONObject jsonObject) throws JSONException {
+        Bundle bundle = new Bundle();
+        Iterator iter = jsonObject.keys();
+        while(iter.hasNext()){
+            String key = (String)iter.next();
+            String value = jsonObject.getString(key);
+            bundle.putString(key,value);
+        }
+        return bundle;
     }
 
     /*

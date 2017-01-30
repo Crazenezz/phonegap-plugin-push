@@ -67,6 +67,12 @@ describe('phonegap-plugin-push', function () {
             expect(push.unsubscribe).toBeDefined();
             expect(typeof push.unsubscribe === 'function').toBe(true);
         });
+
+        it('should contain a notify function', function() {
+            var push = PushNotification.init({});
+            expect(push.notify).toBeDefined();
+            expect(typeof push.notify === 'function').toBe(true);
+        });
     });
 
     describe('PushNotification instance', function () {

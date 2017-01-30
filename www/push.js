@@ -207,6 +207,26 @@ PushNotification.prototype.clearAllNotifications = function(successCallback, err
 };
 
 /**
+ * Trigger the notification manually
+ */
+
+ PushNotification.prototype.notify = function(data, successCallback, errorCallback) {
+     if (!errorCallback) { errorCallback = function() {}; }
+
+     if (typeof errorCallback !== 'function')  {
+         console.log('PushNotification.notify failure: failure parameter not a function');
+         return;
+     }
+
+     if (typeof successCallback !== 'function') {
+         console.log('PushNotification.notify failure: success callback parameter must be a function');
+         return;
+     }
+
+     exec(successCallback, errorCallback, 'PushNotification', 'notify', [data]);
+ }
+
+/**
  * Listen for an event.
  *
  * Any event is supported, but the following are built-in:
